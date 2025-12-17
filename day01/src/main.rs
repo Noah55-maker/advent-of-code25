@@ -55,26 +55,27 @@ fn soln2() {
             let substr: String = chars.skip(1).take(buffer.len()-2).collect();
             let clicks: i32 = substr.parse().unwrap();
 
-            for _i in 0..clicks {
-                lock += 1;
-                if lock == 100 {
-                    lock = 0;
-                    count0 += 1;
-                }
+            count0 += clicks / 100;
+            lock += clicks % 100;
+
+            if lock >= 100 {
+                lock -= 100;
+                count0 += 1;
             }
         }
         else if buffer.starts_with('L') {
             let substr: String = chars.skip(1).take(buffer.len()-2).collect();
             let clicks: i32 = substr.parse().unwrap();
 
-            for _i in 0..clicks {
-                lock -= 1;
-                if lock == 0 {
-                    count0 += 1;
-                }
-                if lock == -1 {
-                    lock = 99;
-                }
+            count0 += clicks / 100;
+            let was0 = lock == 0;
+            lock -= clicks % 100;
+
+            if lock == 0 || (lock < 0 && !was0) {
+                count0 += 1;
+            }
+            if lock < 0 {
+                lock += 100;
             }
         } else {
             break;
